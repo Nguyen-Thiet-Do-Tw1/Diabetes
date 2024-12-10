@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diabetes Prediction</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f6f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        h2 {
+            text-align: center;
+            color: #4CAF50;
+            margin-top: 50px;
+        }
+
+        form {
+            background-color: white;
+            padding: 30px;
+            max-width: 400px;
+            margin: 40px auto;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        label {
+            font-weight: bold;
+            margin-top: 10px;
+            display: block;
+            color: #4CAF50;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+
+        input[type="submit"], input[type="button"] {
+            padding: 12px 20px;
+            margin: 10px 0;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        input[type="submit"]:hover, input[type="button"]:hover {
+            background-color: #45a049;
+        }
+
+        /* Modal dialog styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            overflow: hidden;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 10% auto;
+            padding: 30px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 400px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            animation: showModal 0.4s ease;
+        }
+
+        @keyframes showModal {
+            from {opacity: 0; transform: translateY(-20px);}
+            to {opacity: 1; transform: translateY(0);}
+        }
+
+        .close {
+            color: #888;
+            font-size: 28px;
+            font-weight: bold;
+            position: absolute;
+            right: 15px;
+            top: 10px;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: black;
+        }
+
+        #resultText {
+            font-size: 18px;
+            color: #333;
+        }
+
+        /* Responsive design */
+        @media only screen and (max-width: 600px) {
+            form {
+                padding: 20px;
+                margin: 20px auto;
+            }
+
+            .modal-content {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Diabetes Prediction Form</h2>
+
+    <form action="/predict" method="POST">
+        <label>Pregnancies</label>
+        <input type="text" name="Pregnancies" value="{{ data['Pregnancies'] if data else '' }}" required>
+        
+        <label>Glucose</label>
+        <input type="text" name="Glucose" value="{{ data['Glucose'] if data else '' }}" required>
+        
+        <label>BloodPressure</label>
+        <input type="text" name="BloodPressure" value="{{ data['BloodPressure'] if data else '' }}" required>
+        
+        <label>SkinThickness</label>
+        <input type="text" name="SkinThickness" value="{{ data['SkinThickness'] if data else '' }}" required>
+        
+        <label>Insulin</label>
+        <input type="text" name="Insulin" value="{{ data['Insulin'] if data else '' }}" required>
+        
+        <label>BMI</label>
+        <input type="text" name="BMI" value="{{ data['BMI'] if data else '' }}" required>
+        
+        <label>DiabetesPedigreeFunction</label>
+        <input type="text" name="DiabetesPedigreeFunction" value="{{ data['DiabetesPedigreeFunction'] if data else '' }}" required>
+        
+        <label>Age</label>
+        <input type="text" name="Age" value="{{ data['Age'] if data else '' }}" required>
+
+        <input type="submit" value="Predict">
+        <input type="button" value="Clear" onclick="clearForm()">
+    </form>
+
+    <!-- Modal dialog to display the result -->
+    <div id="resultModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <p id="resultText"></p>
+        </div>
+    </div>
+
+    <script>
+        function clearForm() {
+            document.querySelectorAll('input[type="text"]').forEach(input => input.value = '');
+        }
+
+        // Display modal with the result
+        function showModal(resultText) {
+            document.getElementById("resultText").innerText = resultText;
+            document.getElementById("resultModal").style.display = "block";
+        }
+
+        // Close the modal
+        function closeModal() {
+            document.getElementById("resultModal").style.display = "none";
+        }
+
+        // Check if prediction_text exists and display modal
+        var predictionText = "{{ prediction_text }}";
+        if (predictionText) {
+            showModal(predictionText);
+        }
+    </script>
+
+</body>
+</html>

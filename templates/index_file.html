@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diabetes Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 50px;
+        }
+        form {
+            width: 300px;
+            margin: auto;
+        }
+        input[type="file"], input[type="submit"], input[type="button"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            box-sizing: border-box;
+        }
+        input[type="submit"], input[type="button"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover, input[type="button"]:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 20px;
+            color: #333;
+        }
+        .table-container {
+            margin-top: 20px;
+            max-height: 400px; /* Giới hạn chiều cao của bảng */
+            overflow-y: auto;  /* Thêm thanh cuộn dọc */
+            border: 1px solid #ccc;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+            text-align: left;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Diabetes Prediction</h2>
+
+    <form action="/predict" method="POST" enctype="multipart/form-data">
+        <label>Select test file (CSV):</label>
+        <input type="file" name="file" accept=".csv" required>
+        <input type="submit" value="Predict">
+    </form>
+
+    <div class="result">
+        {% if prediction_text %}
+            <p>{{ prediction_text }}</p>
+        {% endif %}
+        {% if accuracy_text %}
+            <p>{{ accuracy_text }}</p>
+        {% endif %}
+        {% if precision_text %}
+            <p>{{ precision_text }}</p>
+        {% endif %}
+        {% if recall_text %}
+            <p>{{ recall_text }}</p>
+        {% endif %}
+        {% if f1_text %}
+            <p>{{ f1_text }}</p>
+        {% endif %}
+        {% if confusion_matrix_text %}
+            <pre>{{ confusion_matrix_text }}</pre>
+        {% endif %}
+    </div>
+
+    <!-- Thêm bảng kết quả với thanh cuộn và dòng tô màu -->
+    <div class="table-container">
+        {{ table_html | safe }}
+    </div>
+
+    {% if download_link %}
+        <form action="{{ download_link }}" method="GET">
+            <input type="submit" value="Download Prediction Results">
+        </form>
+    {% endif %}
+
+</body>
+</html>
